@@ -1,3 +1,153 @@
-<h1>
-  Call Functions.
-</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Currency API</title>
+	<style>
+		body {
+			font-family: 'Courier New', Courier, monospace;
+			color: #e0e0e0;
+			background-color: #121212;
+			margin: 0;
+			padding: 0;
+		}
+
+		.container {
+			width: 30%;
+			margin: 20px auto;
+			padding: 15px;
+			transition: all 0.3s ease;
+		}
+
+		.card {
+			background: #1e1e1e;
+			border: 1px solid #333;
+			border-radius: 8px;
+			box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+			padding: 15px;
+			font-size: 14px;
+			transition: all 0.3s ease;
+			cursor: pointer;
+		}
+
+		h1,
+		h2 {
+			color: #4caf50;
+			margin: 0;
+		}
+
+		h1 {
+			font-size: 18px;
+			margin-bottom: 10px;
+		}
+
+		h2 {
+			font-size: 16px;
+			border-bottom: 2px solid #4caf50;
+			padding-bottom: 5px;
+			margin-top: 10px;
+		}
+
+		code {
+			background: #2c2c2c;
+			padding: 2px 4px;
+			border-radius: 4px;
+			color: #a5d6a7;
+			font-size: 12px;
+		}
+
+		pre {
+			background: #1c1c1c;
+			padding: 10px;
+			border-radius: 4px;
+			border: 1px solid #333;
+			overflow-x: auto;
+			font-size: 12px;
+		}
+
+		ul {
+			padding-left: 20px;
+			margin: 5px 0;
+		}
+
+		li {
+			margin-bottom: 5px;
+		}
+
+		.note {
+			float: right;
+			font-size: 12px;
+			color: #888;
+		}
+
+		.card.expanded {
+			font-size: 20px;
+		}
+
+		.container.expanded {
+			width: 90%;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="card" id="apiCard">
+			<h1>Currency Conversion API</h1>
+
+			<h2>Endpoint</h2>
+			<pre><code>https://jfunctions.netlify.app/.netlify/functions/currency?from=&lt;currency_code&gt;&amp;to=&lt;currency_code&gt;&amp;amount=&lt;int&gt;</code></pre>
+
+			<h2>Parameters</h2>
+			<ul>
+				<li><strong>from</strong>: Currency code to convert from.</li>
+				<li><strong>to</strong>: Currency code to convert to.</li>
+				<li><strong>amount</strong>: Amount of currency to convert.</li>
+			</ul>
+
+			<h2>Supported Currency Codes</h2>
+			<pre><code>AED, AFN, ALL, AMD, ANG, AOA, ARS, AUD, AWG, AZN, BAM, BBD, BDT, BGN, BHD, BIF, BMD, BND, BOB, BRL, BSD, BTC, BTN, BWP, BYN, BYR, BZD, CAD, CDF, CHF, CLF, CLP, CNH, CNY, COP, CRC, CUC, CUP, CVE, CZK, DJF, DKK, DOP, DZD, EEK, EGP, ERN, ETB, EUR, FJD, FKP, GBP, GEL, GGP, GHS, GIP, GMD, GNF, GTQ, GYD, HKD, HNL, HRK, HTG, HUF, IDR, ILS, IMP, INR, IQD, IRR, ISK, JEP, JMD, JOD, JPY, KES, KGS, KHR, KMF, KPW, KRW, KWD, KYD, KZT, LAK, LBP, LKR, LRD, LSL, LYD, MAD, MDL, MGA, MKD, MMK, MNT, MOP, MRO, MRU, MTL, MUR, MVR, MWK, MXN, MYR, MZN, NAD, NGN, NIO, NOK, NPR, NZD, OMR, PAB, PEN, PGK, PHP, PKR, PLN, PYG, QAR, RON, RSD, RUB, RWF, SAR, SBD, SCR, SDG, SEK, SGD, SHP, SLL, SOS, SRD, SSP, STD, STN, SVC, SYP, SZL, THB, TJS, TMT, TND, TOP, TRY, TTD, TWD, TZS, UAH, UGX, USD, UYU, UZS, VES, VND, VUV, WST, XAF, XAG, XAU, XCD, XDR, XOF, XPD, XPF, XPT, YER, ZAR, ZMK, ZMW</code></pre>
+
+			<h2>Example Request</h2>
+			<pre><code>https://jfunctions.netlify.app/.netlify/functions/currency?from=USD&amp;to=EUR&amp;amount=100</code></pre>
+
+			<h2>Response</h2>
+			<pre><code>{
+    "value": "&lt;value&gt;",
+    "rates": {
+        "&lt;currency_code&gt;": "&lt;value&gt;"
+    }
+}</code></pre>
+			<p>The API response includes the converted value and the exchange rates for the given currencies.</p>
+			<div class="note">
+				Powered by <a href="https://openexchangerates.org/" style="color: #4caf50;">Open Exchange Rates</a>
+			</div>
+		</div>
+	</div>
+	<script>
+		// Function to toggle the card size
+		function toggleCardSize(card) {
+			card.classList.toggle('expanded');
+			card.parentElement.classList.toggle('expanded');
+		}
+
+		// Handle clicks on the card
+		document.getElementById('apiCard').addEventListener('click', function (event) {
+			event.stopPropagation(); // Prevent click from propagating to document
+			toggleCardSize(this);
+		});
+
+		// Handle clicks outside the card
+		document.addEventListener('click', function (event) {
+			const card = document.getElementById('apiCard');
+			if (card.classList.contains('expanded') && !card.contains(event.target)) {
+				card.classList.remove('expanded');
+				card.parentElement.classList.remove('expanded');
+			}
+		});
+	</script>
+</body>
+
+</html>
