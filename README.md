@@ -1,6 +1,6 @@
-# functions
-Deployed in netlify functions to call other service API
+# APIs
 
-git page url : https://jebin2.github.io/functions
+This repository contains the documentation and source code for APIs deployed using Netlify Functions. The APIs provide various functionalities and are accessible via the following URLs:
 
-netlify url : https://jeapis.netlify.app
+- **GitHub Pages URL**: [https://jebin2.github.io/apis](https://jebin2.github.io/apis)
+- **Netlify URL**: [https://jeapis.netlify.app](https://jeapis.netlify.app)
