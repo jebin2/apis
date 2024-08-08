@@ -230,6 +230,10 @@ exports.handler = async function (event, context) {
         }
         return {
             statusCode: 200,
+            headers: {
+                'Access-Control-Allow-Origin': '*', // Allow all origins (adjust as needed)
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 value: convertCurrency(amount, fromCurrency, toCurrency, data),
                 rates: data 
@@ -239,6 +243,10 @@ exports.handler = async function (event, context) {
         console.log(e);
         return {
             statusCode: 500,
+            headers: {
+                'Access-Control-Allow-Origin': '*', // Allow all origins (adjust as needed)
+                'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
                 "error": true,
                 message: e.message,
