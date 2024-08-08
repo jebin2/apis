@@ -213,7 +213,7 @@ exports.handler = async function (event, context) {
         }
         return {
             statusCode: 200,
-            body: JSON.stringify({ value: convertCurrency(amount, fromCurrency, toCurrency, data) }),
+            body: JSON.stringify({ value: convertCurrency(amount, fromCurrency, toCurrency, data), rates: data }),
         };
     } catch (e) {
         console.log(e);
@@ -232,10 +232,15 @@ function convertCurrency(amount, fromCurrency, toCurrency, rates) {
     const fromRate = rates[fromCurrency];
     const toRate = rates[toCurrency];
 
-    if (!fromRate || !toRate) {
+    if (fromRate === undefined || toRate === undefined) {
         throw new Error(`Unsupported currency code: ${fromCurrency} or ${toCurrency}`);
     }
 
     const convertedAmount = amount * (toRate / fromRate);
+
+    for (let cur in rates) {
+        rates[cur] = rates[cur] / fromRate;
+    }
+
     return convertedAmount;
 }
