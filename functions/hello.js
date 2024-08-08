@@ -1,10 +1,11 @@
+require('dotenv').config();
 const {
-    DATABASE_URL,
+    SUPABASE_URL,
     SUPABASE_ANON_KEY
 } = process.env;
 
 const { createClient } = require('@supabase/supabase-js');
-const supabase = createClient(DATABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 exports.handler = async function(event, context) {
     let { data, error } = await supabase
@@ -14,7 +15,7 @@ exports.handler = async function(event, context) {
     if (error) {
         return {
             statusCode: 500,
-            body: JSON.stringify({ error: error.message }),
+            body: JSON.stringify({ error }),
         };
     }
 
