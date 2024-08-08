@@ -183,47 +183,6 @@ const supportedCurrency = {
     "ZMK": "Zambian Kwacha (pre-2013)",
     "ZMW": "Zambian Kwacha"
 };
-exports.handler = async function (event, context) {
-    try {
-        const amount = event.queryStringParameters.amount ? event.queryStringParameters.amount : 1;
-        const fromCurrency = event.queryStringParameters.from;
-        const toCurrency = event.queryStringParameters.to;
-
-        if (!supportedCurrency[fromCurrency] || !supportedCurrency[toCurrency]) {
-            throw new Error(`Unsupported currency code: ${fromCurrency} or ${toCurrency}`);
-        }
-
-        const now = new Date();
-        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-        let { data, error } = await supabase.from('currency').select('*').gte('generated_time', startOfToday);
-        if (error) {
-            return {
-                statusCode: 500,
-                body: JSON.stringify({ "error": true }),
-            };
-        }
-        if (data.length === 0) {
-            let response = await fetch("https://openexchangerates.org/api/latest.json?app_id=" + CURRENCY_API_KEY + "&base=USD");
-            const currencyRates = await response.json();
-
-            await supabase.from('currency').insert({ base_currency: currencyRates.base, currency_map: currencyRates.rates, generated_time: currencyRates.timestamp + '000' });
-            data = currencyRates.rates;
-        } else {
-            data = data[0].currency_map;
-        }
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ value: convertCurrency(amount, fromCurrency, toCurrency, data), rates: data }),
-        };
-    } catch (e) {
-        console.log(e);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ "error": true, supported_currency: supportedCurrency }),
-        };
-    }
-};
-
 function convertCurrency(amount, fromCurrency, toCurrency, rates) {
     if (fromCurrency === toCurrency) {
         return amount;
@@ -244,3 +203,48 @@ function convertCurrency(amount, fromCurrency, toCurrency, rates) {
 
     return convertedAmount;
 }
+exports.handler = async function (event, context) {
+    try {
+        const amount = event.queryStringParameters.amount ? event.queryStringParameters.amount : 1;
+        const fromCurrency = event.queryStringParameters.from;
+        const toCurrency = event.queryStringParameters.to;
+
+        if (!supportedCurrency[fromCurrency] || !supportedCurrency[toCurrency]) {
+            throw new Error(`Unsupported currency code: ${fromCurrency} or ${toCurrency}`);
+        }
+
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+        let { data, error } = await supabase.from('currency').select('*').gte('generated_time', startOfToday);
+        if (error) {
+            throw new Error(error);
+        }
+        if (data.length === 0) {
+            let response = await fetch("https://openexchangerates.org/api/latest.json?app_id=" + CURRENCY_API_KEY + "&base=USD");
+            const currencyRates = await response.json();
+
+            await supabase.from('currency').insert({ base_currency: currencyRates.base, currency_map: currencyRates.rates, generated_time: currencyRates.timestamp + '000' });
+            data = currencyRates.rates;
+        } else {
+            data = data[0].currency_map;
+        }
+        return {
+            statusCode: 200,
+            body: JSON.stringify({
+                value: convertCurrency(amount, fromCurrency, toCurrency, data),
+                rates: data 
+            }),
+        };
+    } catch (e) {
+        console.log(e);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({
+                "error": true,
+                message: e.message,
+                supported_currency: supportedCurrency,
+                api_format: "https://jfunctions.netlify.app/.netlify/functions/currency?from=USD&to=INR&amount=1"
+            })
+        };
+    }
+};
