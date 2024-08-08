@@ -1,4 +1,4 @@
-require('dotenv').config();
+//require('dotenv').config();
 const {
     SUPABASE_URL,
     SUPABASE_ANON_KEY,
