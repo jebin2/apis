@@ -1,10 +1,10 @@
 const {
     DATABASE_URL,
-    SUPABASE_SERVICE_API_KEY
+    SUPABASE_ANON_KEY
 } = process.env;
 
 const { createClient } = require('@supabase/supabase-js');
-const supabase = createClient(DATABASE_URL, SUPABASE_SERVICE_API_KEY);
+const supabase = createClient(DATABASE_URL, SUPABASE_ANON_KEY);
 
 exports.handler = async function(event, context) {
     let { data, error } = await supabase
