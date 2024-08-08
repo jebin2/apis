@@ -185,7 +185,7 @@ const supportedCurrency = {
 };
 exports.handler = async function (event, context) {
     try {
-
+        const amount = event.queryStringParameters.amount ? event.queryStringParameters.amount : 1;
         const fromCurrency = event.queryStringParameters.from;
         const toCurrency = event.queryStringParameters.to;
 
@@ -213,7 +213,7 @@ exports.handler = async function (event, context) {
         }
         return {
             statusCode: 200,
-            body: JSON.stringify({ value: convertCurrency(1, fromCurrency, toCurrency, data) }),
+            body: JSON.stringify({ value: convertCurrency(amount, fromCurrency, toCurrency, data) }),
         };
     } catch (e) {
         console.log(e);
