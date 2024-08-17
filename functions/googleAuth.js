@@ -14,13 +14,12 @@ exports.handler = async function (event, context) {
     const clientSecret = GOOGLE_CLIENT_SECRET;
     const redirectUri = GOOGLE_REDIRECT_URI;
 
-    const oauth2Client = new google.auth.OAuth2(
-        clientId,
-        clientSecret,
-        redirectUri
-    );
-
     try {
+        const oauth2Client = new google.auth.OAuth2(
+            clientId,
+            clientSecret,
+            redirectUri
+        );
         const { tokens } = await oauth2Client.getToken(code);
         oauth2Client.setCredentials(tokens);
 
