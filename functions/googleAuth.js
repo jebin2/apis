@@ -27,12 +27,20 @@ exports.handler = async function (event, context) {
         const drive = google.drive({ version: 'v3', auth: oauth2Client });
         const res = await drive.files.list();
         return {
+            headers: {
+                'Access-Control-Allow-Origin': '*', // Allow all origins (adjust as needed)
+                'Content-Type': 'application/json',
+            },
             statusCode: 200,
             body: JSON.stringify(res.data),
         };
     } catch (error) {
         console.error('Error getting tokens:', error);
         return {
+            headers: {
+                'Access-Control-Allow-Origin': '*', // Allow all origins (adjust as needed)
+                'Content-Type': 'application/json',
+            },
             statusCode: 500,
             body: 'Error getting tokens',
         };
