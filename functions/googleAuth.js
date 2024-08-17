@@ -1,9 +1,9 @@
-require('dotenv').config();
-const {
-    GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET,
-    GOOGLE_REDIRECT_URI
-} = process.env;
+// require('dotenv').config();
+// const {
+//     GOOGLE_CLIENT_ID,
+//     GOOGLE_CLIENT_SECRET,
+//     GOOGLE_REDIRECT_URI
+// } = process.env;
 
 const { google } = require('googleapis');
 const axios = require('axios');
