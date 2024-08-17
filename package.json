@@ -11,6 +11,9 @@
   "license": "ISC",
   "dependencies": {
     "@supabase/supabase-js": "^2.45.1",
-    "dotenv": "^16.4.5"
+    "axios": "^1.7.4",
+    "axois": "^0.0.1-security",
+    "dotenv": "^16.4.5",
+    "googleapis": "^142.0.0"
   }
 }
