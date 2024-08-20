@@ -1,4 +1,4 @@
-const { createAppDataFile, getAppDataFile, getDriveObject } = require("./utils/DataProcessor");
+const { createAppDataFile, getAppDataFile, getDriveObject, updateAppDataFile } = require("./utils/DataProcessor");
 const FILE_NAME = "cardholder.json";
 
 exports.handler = async function (event, context) {
@@ -30,7 +30,7 @@ exports.handler = async function (event, context) {
         switch (type) {
             case "create":
             case "fetch":
-                await createAppDataFile(drive, []);
+                await createAppDataFile(drive);
                 break;
             case "update":
                 await updateAppDataFile(drive, newFileContent);
@@ -61,26 +61,6 @@ exports.handler = async function (event, context) {
         };
     }
 };
-
-async function updateAppDataFile(drive, newFileContent) {
-    try {
-        const file = await getAppDataFile(drive);
-        let fileId = file.id;
-        await drive.files.update({
-            fileId: fileId,
-            media: {
-                mimeType: 'application/json',
-                body: JSON.stringify(newFileContent)
-            },
-            fields: 'id'
-        });
-        console.log('updateAppDataFile :: file updated successfully');
-        return true;
-    } catch (error) {
-        console.error('updateAppDataFile :: ' + error.message);
-        throw error;
-    }
-}
 
 async function listAppDataFiles(drive) {
     try {

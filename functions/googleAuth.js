@@ -5,7 +5,7 @@ const oauth2Client = new OAuth2Client(
     process.env.GOOGLE_CLIENT_SECRET,
     process.env.GOOGLE_REDIRECT_URI
 );
-const { createAppDataFile, getAppDataFile, getDriveObject } = require("./utils/DataProcessor");
+const { createAppDataFile, getAppDataFile, getDriveObject, updateAppDataFile  } = require("./utils/DataProcessor");
 
 exports.handler = async function (event, context) {
     const headers = {
@@ -33,9 +33,13 @@ exports.handler = async function (event, context) {
 
         if(content) {
             let drive = await getDriveObject(response);
-            await createAppDataFile(drive, content);
+            await createAppDataFile(drive);
             let res = await getAppDataFile(drive);
             response.content = res.content;
+            if(content && content.length > 0) {
+                res = await updateAppDataFile(drive, [...response.content, ...content]);
+                response.content = res.content;
+            }
         }
         console.log("googleAuth :: token generated successfully");
         return {

@@ -40,7 +40,7 @@ async function getDriveObject(response) {
     }
 }
 
-async function createAppDataFile(drive, content) {
+async function createAppDataFile(drive) {
     try {
         let isFileAlreadyExists = await isAppDataFileExists(drive);
         if (isFileAlreadyExists) {
@@ -55,7 +55,7 @@ async function createAppDataFile(drive, content) {
             },
             media: {
                 mimeType: 'application/json',
-                body: JSON.stringify(content)
+                body: JSON.stringify([])
             },
             fields: 'id'
         });
@@ -112,4 +112,23 @@ async function getAppDataFile(drive) {
     }
 }
 
-module.exports = { getDriveObject, createAppDataFile, getAppDataFile };
+async function updateAppDataFile(drive, newFileContent) {
+    try {
+        const file = await getAppDataFile(drive);
+        let fileId = file.id;
+        await drive.files.update({
+            fileId: fileId,
+            media: {
+                mimeType: 'application/json',
+                body: JSON.stringify(newFileContent)
+            },
+            fields: 'id'
+        });
+        console.log('updateAppDataFile :: file updated successfully');
+        return true;
+    } catch (error) {
+        console.error('updateAppDataFile :: ' + error.message);
+        throw error;
+    }
+}
+module.exports = { getDriveObject, createAppDataFile, getAppDataFile, updateAppDataFile };
