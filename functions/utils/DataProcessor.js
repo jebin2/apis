@@ -116,7 +116,7 @@ async function updateAppDataFile(drive, newFileContent = []) {
     try {
         const file = await getAppDataFile(drive);
         newFileContent = mergeArraysByKey(file.content, newFileContent, "key");
-        newFileContent = newFileContent.filter(x => !x.is_deleted);
+        // newFileContent = newFileContent.filter(x => !x.is_deleted);
         newFileContent.forEach(item => {
             item.is_synced = true;
         });
@@ -136,22 +136,23 @@ async function updateAppDataFile(drive, newFileContent = []) {
     }
 }
 
-function mergeArraysByKey(array1, array2, key) {
-    const dict1 = array1.reduce((acc, item) => {
-        acc[item[key]] = item;
-        return acc;
-    }, {});
-
-    const dict2 = array2.reduce((acc, item) => {
-        acc[item[key]] = item;
-        return acc;
-    }, {});
-
-    const mergedDict = { ...dict1, ...dict2 };
-    let final = [];
-    Object.values(mergedDict).map(values => {
-        final.push(values)
+function mergeArraysByKey(oldData, newData) {
+    let finalDataMap = new Map();
+    oldData.forEach(item => {
+        finalDataMap.set(item.key, item);
     });
-    return final;
+
+    newData.forEach(item => {
+        if (finalDataMap.has(item.key)) {
+            let existingItem = finalDataMap.get(item.key);
+            if (item.last_modified_time > existingItem.last_modified_time) {
+                finalDataMap.set(item.key, item);
+            }
+        } else {
+            finalDataMap.set(item.key, item);
+        }
+    });
+
+    return Array.from(finalDataMap.values());
 }
 module.exports = { getDriveObject, createAppDataFile, getAppDataFile, updateAppDataFile };
