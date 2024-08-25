@@ -31,15 +31,13 @@ exports.handler = async function (event, context) {
         delete response.res;
         delete response.tokens;
 
-        if(content) {
-            let drive = await getDriveObject(response);
-            await createAppDataFile(drive);
+        
+        let drive = await getDriveObject(response);
+        await createAppDataFile(drive);
+        if(content && content.length > 0) {
+            await updateAppDataFile(drive, content);
             let res = await getAppDataFile(drive);
             response.content = res.content;
-            if(content && content.length > 0) {
-                res = await updateAppDataFile(drive, [...response.content, ...content]);
-                response.content = res.content;
-            }
         }
         console.log("googleAuth :: token generated successfully");
         return {

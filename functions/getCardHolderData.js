@@ -26,12 +26,9 @@ exports.handler = async function (event, context) {
             refresh_token: refresh_token
         };
         let drive = await getDriveObject(response);
-        
+        await createAppDataFile(drive);
         switch (type) {
             case "create":
-            case "fetch":
-                await createAppDataFile(drive);
-                break;
             case "update":
                 await updateAppDataFile(drive, newFileContent);
                 break;

@@ -112,12 +112,16 @@ async function getAppDataFile(drive) {
     }
 }
 
-async function updateAppDataFile(drive, newFileContent) {
+async function updateAppDataFile(drive, newFileContent = []) {
     try {
         const file = await getAppDataFile(drive);
-        let fileId = file.id;
+        newFileContent = mergeArraysByKey(file.content, newFileContent, "key");
+        newFileContent = newFileContent.filter(x => !x.is_deleted);
+        newFileContent.forEach(item => {
+            item.is_synced = true;
+        });
         await drive.files.update({
-            fileId: fileId,
+            fileId: file.id,
             media: {
                 mimeType: 'application/json',
                 body: JSON.stringify(newFileContent)
@@ -130,5 +134,24 @@ async function updateAppDataFile(drive, newFileContent) {
         console.error('updateAppDataFile :: ' + error.message);
         throw error;
     }
+}
+
+function mergeArraysByKey(array1, array2, key) {
+    const dict1 = array1.reduce((acc, item) => {
+        acc[item[key]] = item;
+        return acc;
+    }, {});
+
+    const dict2 = array2.reduce((acc, item) => {
+        acc[item[key]] = item;
+        return acc;
+    }, {});
+
+    const mergedDict = { ...dict1, ...dict2 };
+    let final = [];
+    Object.values(mergedDict).map(values => {
+        final.push(values)
+    });
+    return final;
 }
 module.exports = { getDriveObject, createAppDataFile, getAppDataFile, updateAppDataFile };
