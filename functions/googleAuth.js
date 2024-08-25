@@ -36,9 +36,9 @@ exports.handler = async function (event, context) {
         await createAppDataFile(drive);
         if(content && content.length > 0) {
             await updateAppDataFile(drive, content);
-            let res = await getAppDataFile(drive);
-            response.content = res.content;
         }
+        let res = await getAppDataFile(drive);
+        response.content = res.content;
         console.log("googleAuth :: token generated successfully");
         return {
             headers: headers,
