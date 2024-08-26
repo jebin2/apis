@@ -102,9 +102,10 @@ async function getAppDataFile(drive) {
         });
 
         console.log("getAppDataFile :: file retrieved successfully.");
+
         return {
             id: file.id,
-            content: fileContent.data
+            content: fileContent.data.filter(x => !x.is_deleted)
         };
     } catch (error) {
         console.error("getAppDataFile :: " + error.message);
@@ -116,7 +117,6 @@ async function updateAppDataFile(drive, newFileContent = []) {
     try {
         const file = await getAppDataFile(drive);
         newFileContent = mergeArraysByKey(file.content, newFileContent, "key");
-        // newFileContent = newFileContent.filter(x => !x.is_deleted);
         newFileContent.forEach(item => {
             item.is_synced = true;
         });
