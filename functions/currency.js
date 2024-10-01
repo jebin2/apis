@@ -4,7 +4,7 @@ const {
     SUPABASE_ANON_KEY,
     CURRENCY_API_KEY
 } = process.env;
-const CustomError = require('./Utils/CustomError');
+const CustomError = require('./utils/CustomError');
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
