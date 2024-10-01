@@ -206,8 +206,8 @@ function convertCurrency(amount, fromCurrency, toCurrency, rates) {
 exports.handler = async function (event, context) {
     try {
         const amount = event.queryStringParameters.amount ? event.queryStringParameters.amount : 1;
-        const fromCurrency = event.queryStringParameters.from;
-        const toCurrency = event.queryStringParameters.to;
+        const fromCurrency = event.queryStringParameters.from ? event.queryStringParameters.from.toUpperCase() : event.queryStringParameters.from;
+        const toCurrency = event.queryStringParameters.to ? event.queryStringParameters.to.toUpperCase() : event.queryStringParameters.to;
 
         if (!supportedCurrency[fromCurrency] || !supportedCurrency[toCurrency]) {
             throw new Error(`Unsupported currency code: ${fromCurrency} or ${toCurrency}`);
