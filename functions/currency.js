@@ -8,7 +8,7 @@ const {
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const supportedCurrency = {
+const supportedCurrency1 = {
     "AED": "United Arab Emirates Dirham",
     "AFN": "Afghan Afghani",
     "ALL": "Albanian Lek",
@@ -205,6 +205,9 @@ function convertCurrency(amount, fromCurrency, toCurrency, rates) {
 }
 exports.handler = async function (event, context) {
     try {
+        let response = await fetch("https://openexchangerates.org/api/currencies.json");
+        const supportedCurrency = await response.json();
+        
         const amount = event.queryStringParameters.amount ? event.queryStringParameters.amount : 1;
         const fromCurrency = event.queryStringParameters.from ? event.queryStringParameters.from.toUpperCase() : event.queryStringParameters.from;
         const toCurrency = event.queryStringParameters.to ? event.queryStringParameters.to.toUpperCase() : event.queryStringParameters.to;
@@ -214,7 +217,7 @@ exports.handler = async function (event, context) {
         }
         
         if (isNaN(amount)) {
-            throw new Error("Amount should be in integer");
+            throw new Error("Amount should be in Integer");
         }
         
         const now = new Date();
@@ -224,7 +227,7 @@ exports.handler = async function (event, context) {
             throw new Error(error);
         }
         if (data.length === 0) {
-            let response = await fetch("https://openexchangerates.org/api/latest.json?app_id=" + CURRENCY_API_KEY + "&base=USD");
+            response = await fetch("https://openexchangerates.org/api/latest.json?app_id=" + CURRENCY_API_KEY + "&base=USD");
             const currencyRates = await response.json();
 
             await supabase.from('currency').insert({ base_currency: currencyRates.base, currency_map: currencyRates.rates, generated_time: currencyRates.timestamp + '000' });
