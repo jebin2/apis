@@ -8,7 +8,7 @@ const {
 const { createClient } = require('@supabase/supabase-js');
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const supportedCurrency1 = {
+let supportedCurrency = {
     "AED": "United Arab Emirates Dirham",
     "AFN": "Afghan Afghani",
     "ALL": "Albanian Lek",
@@ -206,7 +206,7 @@ function convertCurrency(amount, fromCurrency, toCurrency, rates) {
 exports.handler = async function (event, context) {
     try {
         let response = await fetch("https://openexchangerates.org/api/currencies.json");
-        const supportedCurrency = await response.json();
+        supportedCurrency = await response.json();
         
         const amount = event.queryStringParameters.amount ? event.queryStringParameters.amount : 1;
         const fromCurrency = event.queryStringParameters.from ? event.queryStringParameters.from.toUpperCase() : event.queryStringParameters.from;
