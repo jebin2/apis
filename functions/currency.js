@@ -255,7 +255,7 @@ exports.handler = async function (event, context) {
                 "error": true,
                 message: e.message,
                 supported_currency: supportedCurrency,
-                api_format: "https://jfunctions.netlify.app/.netlify/functions/currency?from=USD&to=INR&amount=1"
+                api_format: "https://jeapis.netlify.app/.netlify/functions/currency?from=USD&to=INR&amount=1"
             })
         };
     }
