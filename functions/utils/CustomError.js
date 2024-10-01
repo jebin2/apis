@@ -1,7 +1,7 @@
 class CustomError extends Error {
-    constructor({ code, message }) {
-        super(message);
-        this.code = code;
+    constructor(detailsObj) {
+        super(detailsObj.message);
+        Object.assign(this, detailsObj);
         this.name = this.constructor.name;
     }
 }
