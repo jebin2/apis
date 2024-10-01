@@ -212,7 +212,11 @@ exports.handler = async function (event, context) {
         if (!supportedCurrency[fromCurrency] || !supportedCurrency[toCurrency]) {
             throw new Error(`Unsupported currency code: ${fromCurrency} or ${toCurrency}`);
         }
-
+        
+        if (isNaN(amount)) {
+            throw new Error("Amount should be in integer");
+        }
+        
         const now = new Date();
         const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
         let { data, error } = await supabase.from('currency').select('*').gte('generated_time', startOfToday);
