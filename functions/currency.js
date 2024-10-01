@@ -83,7 +83,7 @@ exports.handler = async function (event, context) {
             details.param_name = e.key;
         }
         return {
-            statusCode: e instanceof CustomError ? 400 : 500,,
+            statusCode: e instanceof CustomError ? 400 : 500,
             headers: {
                 'Access-Control-Allow-Origin': '*', // Allow all origins (adjust as needed)
                 'Content-Type': 'application/json',
