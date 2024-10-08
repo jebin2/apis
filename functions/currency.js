@@ -73,7 +73,8 @@ exports.handler = async function (event, context) {
             },
             body: JSON.stringify({
                 value: convertCurrency(amount, fromCurrency, toCurrency, data),
-                rates: data 
+                rates: data,
+                supportedCurrency: supportedCurrency
             }),
         };
     } catch (e) {
